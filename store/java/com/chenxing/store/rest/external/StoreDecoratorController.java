@@ -24,7 +24,7 @@ public class StoreDecoratorController {
     @Autowired
     private StoreDecoratorService storeDecoratorService;
 
-    @RequestMapping(path = "/{id}/delail", method = RequestMethod.GET)
+    @RequestMapping(path = "/{storeId}/detail", method = RequestMethod.GET)
     public Object storeDetail(@PathVariable("storeId") Integer storeId) {
         log.info("GET /v1/store/{}/detail", storeId);
         return storeDecoratorService.getStoreDetail(storeId);

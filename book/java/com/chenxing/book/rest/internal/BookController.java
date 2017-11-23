@@ -2,13 +2,11 @@ package com.chenxing.book.rest.internal;
 
 import com.chenxing.book.models.Book;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * BookController
@@ -35,8 +33,11 @@ public class BookController {
 
 
     @RequestMapping(path = "/{bookId}", method = RequestMethod.GET)
-    public Object getBook(@PathVariable("bookId") Integer bookId) {
+    public Object getBook(@PathVariable("bookId") Integer bookId, @RequestParam(required = false) Integer sleep) throws InterruptedException {
         log.info("GET /v5/book/{}", bookId);
+        if (sleep != null) {
+            Thread.sleep(sleep);
+        }
         return books.get(bookId);
     }
 

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @FeignClient(value = "${feign.book}")
 public interface BookFeignClient {
 
-    @RequestMapping(path = "/{bookId}", method = RequestMethod.GET)
+    @RequestMapping(path = "/v5/book/{bookId}", method = RequestMethod.GET)
     Book getBook(@PathVariable("bookId") Integer bookId);
 
 }
