@@ -34,7 +34,7 @@ public class BookController {
 
     @RequestMapping(path = "/{bookId}", method = RequestMethod.GET)
     public Object getBook(@PathVariable("bookId") Integer bookId, @RequestParam(required = false) Integer sleep) throws InterruptedException {
-        log.info("GET /v5/book/{}", bookId);
+        log.info("GET /v5/book/{} sleep:{}", bookId, sleep);
         if (sleep != null) {
             Thread.sleep(sleep);
         }

@@ -7,7 +7,6 @@
 		<groupId>com.chenxing</groupId>
 		<artifactId>spring-cloud-demo</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>..</relativePath>
 	</parent>
 
 	<artifactId>store-demo</artifactId>
@@ -58,6 +57,10 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-consul-discovery</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<!--<dependency>-->
 			<!--<groupId>org.springframework.cloud</groupId>-->

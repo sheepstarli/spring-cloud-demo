@@ -4,7 +4,10 @@ import com.chenxing.store.feign.BookFeignClient;
 import com.chenxing.store.models.Book;
 import com.chenxing.store.models.Store;
 import com.chenxing.store.models.StoreDetail;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,12 +37,27 @@ public class StoreDecoratorService {
         storeDetail.setStoreId(storeId);
         storeDetail.setAvailableNum(store.getNum());
 
-        Book book = bookFeignClient.getBook(store.getBookId());
+        Integer sleep = RandomUtils.nextInt(1000);
+        Book book = bookFeignClient.getBook(store.getBookId(), sleep);
         if (book!= null) {
             storeDetail.setBookId(book.getBookId());
             storeDetail.setBookName(book.getName());
             storeDetail.setBookAuthor(book.getAuthor());
         }
         return storeDetail;
+    }
+
+    @HystrixCommand(groupKey = "Group-1", commandKey = "Test-1", threadPoolKey = "ThreadPool-1")
+    public Object test1() {
+        log.info("test1!!!!!!!!!!");
+        return "test1";
+    }
+
+    @HystrixCommand(groupKey = "Group-2", commandKey = "Test-2", threadPoolKey = "ThreadPool-2")
+    public Object test2(long time) throws InterruptedException {
+        long sleep = RandomUtils.nextInt(200) + time;
+        log.info("test2!!!!!!!!!! {}", sleep);
+        Thread.sleep(sleep);
+        return "test2 time:" + sleep;
     }
 }

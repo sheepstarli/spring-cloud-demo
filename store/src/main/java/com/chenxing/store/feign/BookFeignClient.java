@@ -5,6 +5,7 @@ import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * BookFeignClient
@@ -16,6 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface BookFeignClient {
 
     @RequestMapping(path = "/v5/book/{bookId}", method = RequestMethod.GET)
-    Book getBook(@PathVariable("bookId") Integer bookId);
+    Book getBook(@PathVariable("bookId") Integer bookId, @RequestParam(name = "sleep", required = false) Integer sleep);
 
 }
