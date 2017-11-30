@@ -2,6 +2,7 @@ package com.chenxing.store.service;
 
 import com.chenxing.store.feign.BookFeignClient;
 import com.chenxing.store.models.Book;
+import com.chenxing.store.models.CreateBookBodyData;
 import com.chenxing.store.models.Store;
 import com.chenxing.store.models.StoreDetail;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
@@ -27,7 +28,7 @@ public class StoreDecoratorService {
     @Autowired
     private BookFeignClient bookFeignClient;
 
-    public Object getStoreDetail(Integer storeId) {
+    public Object getStoreDetail(Integer storeId, Integer time) {
         StoreDetail storeDetail = new StoreDetail();
         Store store = storeService.getStore(storeId);
         if (store == null || store.getBookId() == null) {
@@ -37,8 +38,56 @@ public class StoreDecoratorService {
         storeDetail.setStoreId(storeId);
         storeDetail.setAvailableNum(store.getNum());
 
-        Integer sleep = RandomUtils.nextInt(1000);
+        Integer sleep = time == null ? RandomUtils.nextInt(1000) : time;
         Book book = bookFeignClient.getBook(store.getBookId(), sleep);
+        if (book!= null) {
+            storeDetail.setBookId(book.getBookId());
+            storeDetail.setBookName(book.getName());
+            storeDetail.setBookAuthor(book.getAuthor());
+        }
+        return storeDetail;
+    }
+
+    public Object createStore(Integer storeId, Integer time) {
+        StoreDetail storeDetail = new StoreDetail();
+        Store store = storeService.getStore(storeId);
+        if (store == null || store.getBookId() == null) {
+            log.error("store or bookId is null storeId:{}", storeId);
+            return null;
+        }
+        storeDetail.setStoreId(storeId);
+        storeDetail.setAvailableNum(store.getNum());
+
+        Integer sleep = time == null ? RandomUtils.nextInt(1000) : time;
+        CreateBookBodyData body = new CreateBookBodyData();
+        body.setSleep(sleep);
+        body.setBookId(store.getBookId());
+        body.setName("new book!");
+        CreateBookBodyData book = bookFeignClient.createBook(store.getBookId(), body);
+        if (book!= null) {
+            storeDetail.setBookId(book.getBookId());
+            storeDetail.setBookName(book.getName());
+            storeDetail.setBookAuthor(book.getAuthor());
+        }
+        return storeDetail;
+    }
+
+    public Object updateStore(Integer storeId, Integer time) {
+        StoreDetail storeDetail = new StoreDetail();
+        Store store = storeService.getStore(storeId);
+        if (store == null || store.getBookId() == null) {
+            log.error("store or bookId is null storeId:{}", storeId);
+            return null;
+        }
+        storeDetail.setStoreId(storeId);
+        storeDetail.setAvailableNum(store.getNum());
+
+        Integer sleep = time == null ? RandomUtils.nextInt(1000) : time;
+        CreateBookBodyData body = new CreateBookBodyData();
+        body.setSleep(sleep);
+        body.setBookId(store.getBookId());
+        body.setName("update book!");
+        CreateBookBodyData book = bookFeignClient.putBook(store.getBookId(), body);
         if (book!= null) {
             storeDetail.setBookId(book.getBookId());
             storeDetail.setBookName(book.getName());

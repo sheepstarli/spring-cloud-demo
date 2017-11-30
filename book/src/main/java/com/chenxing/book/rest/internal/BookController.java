@@ -1,7 +1,10 @@
 package com.chenxing.book.rest.internal;
 
 import com.chenxing.book.models.Book;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -33,12 +36,41 @@ public class BookController {
 
 
     @RequestMapping(path = "/{bookId}", method = RequestMethod.GET)
-    public Object getBook(@PathVariable("bookId") Integer bookId, @RequestParam(required = false) Integer sleep) throws InterruptedException {
+    public ResponseEntity<Object> getBook(@PathVariable("bookId") Integer bookId, @RequestParam(required = false) Integer sleep) throws InterruptedException {
         log.info("GET /v5/book/{} sleep:{}", bookId, sleep);
         if (sleep != null) {
             Thread.sleep(sleep);
         }
-        return books.get(bookId);
+        Book book = books.get(bookId);
+        if (book == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(book, HttpStatus.OK);
+    }
+
+    @Data
+    private static class CreateBookBodyData extends Book {
+
+        private Integer sleep;
+
+    }
+
+    @RequestMapping(path = "/{bookId}", method = RequestMethod.POST)
+    public Object createBook(@PathVariable("bookId") Integer bookId, @RequestBody CreateBookBodyData body) throws InterruptedException {
+        log.info("POST /v5/book/{} body:{}", bookId, body);
+        if (body.getSleep() != null) {
+            Thread.sleep(body.getSleep());
+        }
+        return body;
+    }
+
+    @RequestMapping(path = "/{bookId}", method = RequestMethod.PUT)
+    public Object putBook(@PathVariable("bookId") Integer bookId, @RequestBody CreateBookBodyData body) throws InterruptedException {
+        log.info("PUT /v5/book/{} body:{}", bookId, body);
+        if (body.getSleep() != null) {
+            Thread.sleep(body.getSleep());
+        }
+        return body;
     }
 
 }

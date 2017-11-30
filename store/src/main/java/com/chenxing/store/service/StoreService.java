@@ -26,6 +26,7 @@ public class StoreService {
         stores.put(5, new Store(5, 5, 10));
         stores.put(6, new Store(6, 6, 10));
         stores.put(7, new Store(7, 7, 10));
+        stores.put(8, new Store(8, 8, 11));
 
     }
 
